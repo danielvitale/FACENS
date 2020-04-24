@@ -1,0 +1,414 @@
+// Autor: Daniel L. Vitale.
+// ATM Simulation.
+
+package caixa.eletronico;
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class CaixaEletronico {
+    
+    // Função para verificar se o banco inserido pelo usuário é inexistente.
+    /*  Detalhes da função:
+        
+        * A função .length é usada para retornar o tamanho da String.
+        * No primeiro if, caso o tamanho da String for maior 3 significa que o
+        usuário inseriu um nome de banco e irá verificar em cada índice da String 
+       'bancos' se o nome inserido é correspondente ao armazenado, se for verdadeira,
+        o banco digitado pelo usuário é verdadeiro e retorna a variável inexistente.
+        * No segundo if, caso o tamanho da String for igual a 3, significa que o
+        usuário digitou o código da agência de um banco e irá verificar em cada
+        índice da String se o código digitado é existente e, por fim, retorna a
+        variável inexistente.
+        * Por ultimo, caso nenhum dos ifs sejam atendidos, a variável inexistente
+        definida no início como verdadeira irá permanecer no mesmo estado,
+        isto é, que o banco digitado é inexistente.
+    */
+    public static boolean bancoInexistente(String banco, String[] bancos, String[] nmrBancos, boolean inexistente, Scanner read) {
+        if(banco.length() > 3) {
+            for (String bancosArmazenados : bancos) {
+                if (bancosArmazenados.equals(banco)) {
+                    inexistente = false;
+                    break;
+                }
+            }
+        } else if(banco.length() == 3) {
+            for(int i = 0; i < nmrBancos.length; i++) {
+                if(banco.equals(nmrBancos[i])) {
+                    System.out.println("Banco Informado: "+bancos[i]);
+                    inexistente = false;
+                    break;
+                }
+            }
+        }
+        return inexistente;
+    }
+    
+    // Função para formatar textos de extrato afim de ficarem organizados no print.
+    // Por fim, retorna o texto formatado no main e adiciona ao extrato.
+    public static String extratos(String transacao, Double valor) {
+        int limite = 0;
+        
+        if(transacao.equals("Saque")) limite = 16;
+        if(transacao.equals("Deposito")) limite = 13;
+        if(transacao.equals("Transf")) limite = 15;
+        
+        String valorFormatado = format(valor);
+        String formatText[] = new String[(limite-valorFormatado.length())+1];
+        
+        // Primeiro índice da String = tipo de transação + :\b.
+        formatText[0] = transacao.concat(": ");
+        for (int i = 1; i < formatText.length-1; i++)
+            // For para dar espaçamentos e organizar no print.
+            formatText[i] = formatText[i-1].concat(" ");
+        
+        // Crédito ou débito.
+        if(transacao.equals("Deposito"))
+            formatText[formatText.length-1] = formatText[formatText.length-2].concat(valorFormatado+"C");
+        else
+            formatText[formatText.length-1] = formatText[formatText.length-2].concat(valorFormatado+"D");
+        
+        return formatText[formatText.length-1];
+    }   
+    
+    // Função para formatação de double pra String.
+    // Tem como objetivo principal remover o ponto no texto e inserir a vírgula.
+    public static String format(double numero){
+        boolean removed = false;
+        
+        String remove = null;
+        String num = Double.toString(numero);
+          
+        if(num.contains("."))
+            num = num.replaceAll("\\.",",");
+        else
+            num = num.concat(",00");
+        
+        for (int i = 0; i < num.length(); i++) {
+            if(num.charAt(i) == ',') {
+                if(num.length() - (i+1) == 1) num = num.concat("0");
+                remove = num.substring(0, i+3);   
+                removed = true;
+                break;
+            }
+        }
+        if(removed)
+            return remove;
+        else
+            return num;
+    }
+    
+    public static void main(String[] args) throws InterruptedException {
+        String CPF;
+        String senha;
+        String conta;
+        String agencia;
+        String banco;
+        
+        String limpaBuffer;
+        String transacao;
+        
+        String escolha, saquesDisponiveis;
+        
+        // Principais bancos que atendem 24hrs.
+        String[] bancos = {
+                            "Banco da Amazonia",
+                            "Banco do Brasil",
+                            "Banco do Nordeste",
+                            "Banco Pan",
+                            "Banco Topázio",
+                            "Banese",
+                            "Banestes",
+                            "Banrisul",
+                            "Banco BMG",
+                            "Bradesco",
+                            "Banco de Brasília",
+                            "Caixa Economica Federal",
+                            "Banco CCB",
+                            "Cetelem",
+                            "Itau Unibanco",
+                            "Mercantil do Brasil",
+                            "Santander",
+                            "Sicoob",
+                            "Sicredi",
+                            "Superdigital",
+                          };
+        String[] nmrBancos = {
+                              "003",
+                              "001",
+                              "004",
+                              "623",
+                              "082",
+                              "047",
+                              "021",
+                              "041",
+                              "318",
+                              "237",
+                              "070",
+                              "104",
+                              "320",
+                              "739",
+                              "341",
+                              "389",
+                              "033",
+                              "756",
+                              "748",
+                              "340",
+                            };
+        
+        int pass_to_int = 0;
+        double saldo, saque, deposito, transferencia;     
+        saldo = 1000;
+        saque = 0;
+        
+        boolean exit;
+        boolean contaEncerrada;
+        boolean inexistente = true;
+        
+        Scanner read = new Scanner(System.in);
+        ArrayList<String> extrato = new ArrayList();
+        
+        do {
+            contaEncerrada = false;
+            
+            System.out.println("-------------------------");
+            System.out.println("Seja Bem-Vindo ao Banco!");
+            System.out.println("-------------------------");
+
+            // CPF
+            do {
+                System.out.print("Digite o seu CPF: ");
+                CPF = read.nextLine();
+
+                if(CPF.equals("12345678900")||CPF.equals("123.456.789-00")) {
+                    if(CPF.equals("12345678900"))
+                        System.out.println("CPF Informado: "
+                                + CPF.substring(0,3)+"."
+                                + CPF.substring(3,6)+"."
+                                + CPF.substring(6,9)+"-"
+                                + CPF.substring(9,11));
+                    
+                    System.out.println("CPF Válido!");
+                } else {
+                    System.out.println("\nCPF Inválido!");
+                    System.out.println("Tela de Acesso não permitido!\n");
+                }
+            } while(!(CPF.equals("12345678900")||CPF.equals("123.456.789-00")));
+
+            // SENHA
+            for(int i = 2; i >= 0; i--) {
+                System.out.print("\nInforme sua senha de 8 dígitos: ");
+                senha = read.nextLine();
+
+                if(senha.equals("01020304")) {
+                    System.out.println("Senha Válida!\n");
+                    System.out.println("Acesso Concedido.");
+                    Thread.sleep(2000);
+                    break;
+                } else {
+                    System.out.println("\nSenha Inválida!");
+                    switch(i) {
+                        case 2:
+                            System.out.println("Você possuí mais "+i+" tentativas!");
+                            break;
+                        case 1:
+                            System.out.println("Você possúi mais "+i+" tentativa!");
+                            break;
+                        default:
+                            System.out.println("Conta Bloqueada!");
+                            System.exit(0);
+                    }
+                }
+            }
+
+            // MENU
+            do {
+                exit = false;
+                
+                System.out.println("\n----------------------------------------");
+                System.out.println("                   MENU                 ");
+                System.out.println("[1] Saldo.                              ");
+                System.out.println("[2] Depósito.                           ");
+                System.out.println("[3] Saque.                              ");
+                System.out.println("[4] Transferência.                      ");
+                System.out.println("[5] Consultar extrato.                  ");
+                System.out.println("[6] Sair.                               ");
+                System.out.println("----------------------------------------");
+                System.out.print("Digite uma opção: ");
+                escolha = read.nextLine();
+                /* Uso do tipo de dado String para leitura caso um valor decimal
+                   seja digitado, se digitado, não buga o programa. */
+                
+                switch(escolha) {
+                    case "1":
+                        // SALDO
+                        System.out.println("Saldo em conta: R$"+format(saldo));
+                        Thread.sleep(1000);
+                        break;
+                    case "2":
+                        // DEPÓSITO
+                        transacao = "Deposito";
+                        
+                        System.out.print("Valor R$");
+                        deposito = read.nextDouble();
+                        System.out.println("");
+
+                        if(deposito < 0) deposito *= -1;  
+                        if(deposito > 5000) {
+                            System.out.println("Valor de deposito "
+                                    + "indisponível. \n"
+                                    + "Deposito limitado à R$5000,00.");
+                            Thread.sleep(2000);
+                            break;
+                        }
+                        saldo += deposito;
+                        
+                        // Adiciona o retorno da função extratos ao arraylist extrato.
+                        extrato.add(extratos(transacao,deposito));
+                        System.out.println("Depósito Realizado!");
+                        Thread.sleep(1000);
+                        break;
+                    case "3":
+                        // SAQUE
+                        transacao = "Saque";
+                        
+                        do {
+                            System.out.println("\n----------------------------------------");
+                            System.out.println("             Valores a Sacar            ");
+                            System.out.println("[1] R$20,00.                            ");
+                            System.out.println("[2] R$50,00.                            ");
+                            System.out.println("[3] R$100,00.                           ");
+                            System.out.println("[4] R$200,00.                           ");
+                            System.out.println("[5] R$300,00.                           ");
+                            System.out.println("[6] R$500,00.                           ");
+                            System.out.println("[7] R$1000,00.                          ");
+                            System.out.println("[8] Sacar outro valor.                  ");
+                            System.out.println("----------------------------------------");
+                            System.out.print("Digite uma opção: ");
+                            saquesDisponiveis = read.nextLine();
+                            /* Uso do tipo de dado String para leitura caso um valor decimal
+                            seja digitado, se digitado, não buga o programa. */
+
+                            // Saques Disponíveis.
+                            switch(saquesDisponiveis) {
+                                case "1":
+                                    saque = 20;
+                                    break;
+                                case "2":
+                                    saque = 50;
+                                    break;
+                                case "3":
+                                    saque = 100;
+                                    break;
+                                case "4":
+                                    saque = 200;
+                                    break;
+                                case "5":
+                                    saque = 300;
+                                    break;
+                                case "6":
+                                    saque = 500;
+                                    break;
+                                case "7":
+                                    saque = 1000;
+                                    break;
+                                case "8":
+                                    // Valor qualquer, mas com limite de R$5000,00.
+                                    System.out.print("Valor R$");
+                                    saque = read.nextDouble();
+                                    System.out.println("");
+
+                                    if(saque < 0) saque *= -1;
+                                    if(saque > 5000) {
+                                        System.out.println("Valor de saque "
+                                                + "indisponível. \n"
+                                                + "Saque limitado à R$5000,00.");
+                                        Thread.sleep(2000);
+                                        exit = true;
+                                        break;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                            try{
+                                pass_to_int = Integer.parseInt(saquesDisponiveis);
+                            }
+                            catch(NumberFormatException e) {}
+                        } while(!(pass_to_int >= 1 && pass_to_int <= 8));
+                        if(exit) break;
+                       
+                        if(saque <= saldo) {
+                            saldo -= saque;
+                            
+                            // Adiciona o retorno da função extratos ao arraylist extrato.
+                            extrato.add(extratos(transacao,saque));
+                            System.out.println("Saque realizado!");
+                        } else {
+                            System.out.println("Saldo insuficiente para saque!");
+                        }
+
+                        Thread.sleep(1000);
+                        break;
+                    case "4":
+                        // TRANSFERÊNCIA
+                        transacao = "Transf";
+                        
+                        System.out.print("\nValor da Transferência: R$");
+                        transferencia = read.nextDouble();
+                        System.out.print("Nome ou numero do banco: ");
+                        limpaBuffer = read.nextLine();
+                        banco = read.nextLine();
+
+                        // Verifica se o retorno da função é verdadeiro ou falso.
+                        // Se for verdadeiro, banco inexistente.
+                        if(bancoInexistente(banco, bancos, nmrBancos, inexistente, read)) {
+                            System.out.println("Banco Inválido!");
+                            Thread.sleep(2000);
+                            break;
+                        }
+
+                        System.out.print("Conta:");
+                        conta = read.nextLine();
+                        System.out.print("Agencia:");
+                        agencia = read.nextLine();
+
+                        if(transferencia < 0) transferencia *= -1;
+                        if(transferencia <= saldo) {
+                            saldo -= transferencia;
+
+                            // Adiciona o retorno da função extratos ao arraylist extrato.
+                            extrato.add(extratos(transacao,transferencia));
+                            System.out.println("Transferência Concluída!");
+                        } else if(transferencia > 5000) {
+                            System.out.println("\nValor de transferência indisponível.");
+                            System.out.println("Transfêrencia limitado à R$5000,00.");
+                        } else {
+                            System.out.println("\nSaldo insuficiente para Transferência!");  
+                        }
+
+                        Thread.sleep(2000);
+                        break;
+                    case "5":
+                        // EXTRATO.
+                        System.out.println("\nHistórico de transações");
+                        for(String extratoShow:extrato)
+                            System.out.println(extratoShow);
+                        
+                        // Tempo aumenta a cada transação nova para leitura.
+                        Thread.sleep(1500+(extrato.size()*1000*1/2));
+                        break;
+                    case "6":
+                        // Encerra conta.
+                        System.out.println("Conta Encerrada.\n");
+                        contaEncerrada = true;
+                        Thread.sleep(1000);
+                        break;
+                    default:
+                        break;
+                }
+            } while(!contaEncerrada);
+            //limpaBuffer = read.nextLine();
+        } while(true); // do principal
+    } // end void
+} // end class
