@@ -1,0 +1,346 @@
+package prova.ac2;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ProvaAC2 {
+    
+    public static void main(String[] args) throws InterruptedException  {
+        ArrayList pArmazenadas = new ArrayList();              
+        int perguntasRepetidas = 0;
+        int creditoAtual = 0;
+ 
+        do {
+            int perguntaAleatoria = (int) ((Math.random()+0.1) * 10);
+            if(!(pArmazenadas.contains(perguntaAleatoria))) {
+                pArmazenadas.add(perguntaAleatoria); 
+                creditoAtual = pergunta(perguntaAleatoria, perguntasRepetidas, creditoAtual);
+                
+                perguntasRepetidas++;
+            }
+        } while (pArmazenadas.size() != 10);          
+    } 
+    
+    public static void soninho(int delay) throws InterruptedException {
+        Thread.sleep(delay);
+    }
+
+    public static int pergunta(int pergunta, int pR, int creditoAtual) throws InterruptedException {
+        int[] money = { 
+                        1000,
+                        5000,
+                        25000,
+                        50000,
+                        75000,
+                        100000,
+                        200000,
+                        500000,
+                        750000,
+                        1000000
+                      };
+        
+        String resposta = "";
+        Scanner read = new Scanner(System.in);
+
+        System.out.printf("\nPergunta número %d valendo R$%d! Crédito Atual: R$%d", pR+1, money[pR], creditoAtual);
+        switch(pergunta) {
+            case 1:
+                System.out.println("\nDe quem é a famosa frase “Penso, logo existo”?");
+                soninho(1000);
+                System.out.println("a) Galileu Galilei.");
+                soninho(1000);
+                System.out.println("b) Descartes.");
+                soninho(1000);
+                System.out.println("c) Sócrates.");
+                soninho(1000);
+                System.out.println("d) Francis Bacon.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("b")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                break;
+            case 2:
+                System.out.println("\nQual o nome do presidente do Brasil que ficou conhecido como Jango?");
+                soninho(1000);
+                System.out.println("a) Jânio Quadros.");
+                soninho(1000);
+                System.out.println("b) Getúlio Vargas.");
+                soninho(1000);
+                System.out.println("c) João Figueiredo.");
+                soninho(1000);
+                System.out.println("d) João Goulart.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("d")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                
+                break;
+            case 3:
+                
+                System.out.println("\nQual o livro mais vendido no mundo a seguir à Bíblia");
+                soninho(1000);
+                System.out.println("a) O Senhor dos Anéis.");
+                soninho(1000);
+                System.out.println("b) Dom Quixote.");
+                soninho(1000);
+                System.out.println("c) O Pequeno Príncipe.");
+                soninho(1000);
+                System.out.println("d) Ela, a Feiticeira.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("b")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                break;
+            case 4:
+                System.out.println("\nQual a nacionalidade de Che Guevara?");
+                soninho(1000);
+                System.out.println("a) Cubana.");
+                soninho(1000);
+                System.out.println("b) Peruana.");
+                soninho(1000);
+                System.out.println("c) Boliviana.");
+                soninho(1000);
+                System.out.println("d) Argentina.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("d")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                
+                break;
+            case 5:
+                System.out.println("\nQual personagem folclórico costuma ser agradado pelos caçadores com a oferta de fumo?");
+                soninho(1000);
+                System.out.println("a) Caipora.");
+                soninho(1000);
+                System.out.println("b) Saci.");
+                soninho(1000);
+                System.out.println("c) Lobisomem.");
+                soninho(1000);
+                System.out.println("d) Boitatá.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("a")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                
+                break;
+            case 6:
+                System.out.println("\nQual destes países é transcontinental?");
+                soninho(1000);
+                System.out.println("a) Rússia.");
+                soninho(1000);
+                System.out.println("b) Filipinas.");
+                soninho(1000);
+                System.out.println("c) Istambul.");
+                soninho(1000);
+                System.out.println("d) Groenlândia.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("a")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                
+                break;
+            case 7:
+                System.out.println("\nJúpiter e Plutão são os correlatos romanos de quais deuses gregos?");
+                soninho(1000);
+                System.out.println("a) Ares e Hermes.");
+                soninho(1000);
+                System.out.println("b) Cronos e Apolo.");
+                soninho(1000);
+                System.out.println("c) Zeus e Hades.");
+                soninho(1000);
+                System.out.println("d) Dionísio e Deméter.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("c")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                
+                break;
+            case 8:
+                System.out.println("\nQue líder mundial ficou conhecida como “Dama de Ferro”?");
+                soninho(1000);
+                System.out.println("a) Dilma Rousseff.");
+                soninho(1000);
+                System.out.println("b) Angela Merkel.");
+                soninho(1000);
+                System.out.println("c) Margaret Thatcher.");
+                soninho(1000);
+                System.out.println("d) Hillary Clinton.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("c")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                break;
+            case 9:
+                System.out.println("\nQuem foi o primeiro homem a pisar na Lua? Em que ano aconteceu?");
+                soninho(1000);
+                System.out.println("a) Yuri Gagarin, em 1961.");
+                soninho(1000);
+                System.out.println("b) Buzz Aldrin, em 1969.");
+                soninho(1000);
+                System.out.println("c) Charles Duke, em 1971.");
+                soninho(1000);
+                System.out.println("d) Neil Armstrong, em 1969.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("d")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                break;
+            case 10:
+                System.out.println("\nQue substância é absorvida pelas plantas e expirada por todos os seres vivos?");
+                soninho(1000);
+                System.out.println("a) O oxigênio.");
+                soninho(1000);
+                System.out.println("b) O nitrogênio.");
+                soninho(1000);
+                System.out.println("c) O nitrato de sódio.");
+                soninho(1000);
+                System.out.println("d) O dióxido de carbono.");
+                soninho(1000);
+                
+                System.out.print("Resposta: ");
+                resposta = read.nextLine();
+                System.out.println("");
+                
+                if(resposta.equals("d")) {
+                    System.out.printf("Você acertou a questão e ganhou %d!", money[pR]);
+                    creditoAtual = money[pR];
+                    if(pR == 10) {
+                        System.out.println("Você ganhou 1 milhão de reais!!!");
+                        System.out.println("");
+                        System.exit(0);
+                    }
+                } else {
+                    System.out.println("Você perdeu tudo!");
+                    System.exit(0);
+                }
+                break;
+        }
+        return creditoAtual;
+    }
+}
